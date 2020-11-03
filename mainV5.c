@@ -20,7 +20,7 @@ int main(void)
    //command = malloc(sizeof(char *));
    char *choices[] = {
 					    "Interest Cal",
-					    "Choices 2",
+					    "Fahren to Celc",
 					    "Choices 3",
 					    "Exit",	
 					 };			
