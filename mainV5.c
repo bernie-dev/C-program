@@ -8,7 +8,8 @@ int main(void)
    /* variable field */
    WINDOW *win_c;
    WINDOW *menu_c;
-   PANEL *my_panels[size]; // panels for win_c, menu_c
+   WINDOW *my_windows[size]; 0-menu, 1-Interest, 2-Fahren-C
+   PANEL *my_panels[size]; // panels for menu, my_windows[1](intererst_calc), my_windows[2](Fahren-C)
    //PANEL *stack_top;
    PANEL *paninterest; //myp_panels[1]
    ITEM **my_items;
@@ -20,7 +21,7 @@ int main(void)
    //command = malloc(sizeof(char *));
    char *choices[] = {
 					    "Interest Cal",
-					    "Choices 2",
+					    "Fahren to Celc",
 					    "Choices 3",
 					    "Exit",	
 					 };			
