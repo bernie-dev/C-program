@@ -8,7 +8,7 @@
 #include <ctype.h>
 
 #define len 50
-#define size 2
+#define size 3
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define CTRLD 4
 
@@ -16,12 +16,14 @@ typedef struct _WIN_struct{
     int startx,starty;
     int HEIGHT, WIDTH;
     int flag;
+    
 }WIN;
 
 
 void init_wparam(WIN *pwin, int ymax, int xmax); //setup window dimensions
 WINDOW *create_wind(WIN *pwin, MENU *menu);
 void win_border(WINDOW *win, MENU *menu, int flag);
+//void set_user_ptrs(PANEL **, char **, int n, char *);
 void interest_calc_win(WINDOW *win_dow, int row, int col, PANEL *paninterest);
 float compute(float P, float Rpct, int N);
 float InputF(WINDOW *, char array[], PANEL *paninterest); 
@@ -81,8 +83,28 @@ void win_border(WINDOW *win, MENU *menu, int flag)
    else	
 		mvwprintw(win,0,(width - length)/2, "%s", winname);    
    
-   
 }
+
+/*PANEL *set_user_ptrs(PANEL **panels, char **choices, int n, char *itemname)
+{
+	//set user ptrs when arrow keys are pressed. This function will do it.
+	
+	int i;
+	char choicename = *itemname;
+	PANEL *highlight
+  	WINDOW *win;  
+	
+	for(i=0;i<n;i++)
+	{
+		if(choices[i] == choicename)	
+			highlight = panel[i];
+			break;
+	}		
+	
+	return highlight;
+	
+}*/
+
 
 void interest_calc_win(WINDOW *local_win, int row, int col, PANEL *paninterest)
 {

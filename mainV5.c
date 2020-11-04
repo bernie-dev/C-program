@@ -6,10 +6,10 @@
 int main(void)
 {
    /* variable field */
-   WINDOW *win_c;
-   WINDOW *menu_c;
-   WINDOW *my_windows[size]; 0-menu, 1-Interest, 2-Fahren-C
-   PANEL *my_panels[size]; // panels for menu, my_windows[1](intererst_calc), my_windows[2](Fahren-C)
+   WINDOW *window_menu;
+   WINDOW *windows_calc[size];// 0-menu, 1-Interest, 2-Fahren-C
+   PANEL *panel_menu;
+   PANEL *panels_calc[size]; // panels for menu, my_windows[1](intererst_calc), my_windows[2](Fahren-C)
    //PANEL *stack_top;
    PANEL *paninterest; //myp_panels[1]
    ITEM **my_items;
@@ -20,13 +20,15 @@ int main(void)
   // char *command;
    //command = malloc(sizeof(char *));
    char *choices[] = {
-					    "Interest Cal",
-					    "Fahren to Celc",
-					    "Choices 3",
-					    "Exit",	
-					 };			
+					    "Interest Cal",		 //0
+					    "Fahren to Celc",    //1
+					    "Choices 3",         //2
+					    "Exit",	             //3; exit doesnt have panel
+					 };		
+	char *itemname;				 	
    
    WIN winb, menub; //typedef struct data type
+
 
   
   //start of ncurses  
@@ -44,7 +46,7 @@ int main(void)
   
   //create items
   n_choices = ARRAY_SIZE(choices); //gives me 4 
-  my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *)); //my_items is array of pointers
+  my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *)); //my_items is array of pointers; set aside storage
   for(i=0; i<n_choices; i++)
 		my_items[i]=new_item(choices[i],choices[i]); //part where literal strings associated with items from choices
   
@@ -68,12 +70,12 @@ int main(void)
   init_wparam(&menub,ymax,xmax); //setup dimensions of menub
   
  //create window  
- menu_c = create_wind(&menub, my_menu);  
- win_c = create_wind(&winb, my_menu);
+ window_menu = create_wind(&menub, my_menu);  
+ windows_calc[0] = create_wind(&winb, my_menu);
  
  //set menu window  and sub window
- set_menu_win(my_menu, menu_c);
- set_menu_sub(my_menu, derwin(menu_c, 6, 20, 2, 1));
+ set_menu_win(my_menu, window_menu);
+ set_menu_sub(my_menu, derwin(window_menu, 6, 20, 2, 1));
 
  
  //set menu mark
@@ -84,30 +86,34 @@ int main(void)
  
  //post a menu
  post_menu(my_menu);
- wrefresh(menu_c);
+ wrefresh(window_menu);
  
- wbkgd(menu_c,COLOR_PAIR(2));
- 
- //attach a panel to window
- my_panels[1] = new_panel(win_c);  //push 1: ordder: stdscr-win
- my_panels[0] = new_panel(menu_c); //push 0; order: stdscr-win-menu
+ wbkgd(window_menu,COLOR_PAIR(2));
  
  
- set_panel_userptr(my_panels[1], my_panels[0]);
- //set_panel_userptr(my_panels[2], my_panels[0]); for additional formula
+ //set panel for window_menu
+ panel_menu = new_panel(window_menu);
+ 
+ //attach a panel to each calculator window... 
+ for(i=0;i<size;i++)  //0-interese,1-fahrenheit,2-choice3
+	panels_calc[i] = new_panel(windows_calc[i]); //stdscr-0-1-2... 2 is on the top
+	
+ top_panel(panel_menu);
  
  update_panels();
  doupdate();
  
- paninterest = my_panels[1]; //user_ptr is my_panels[0]
+ paninterest = panels_calc[1]; //user_ptr is my_panels[0]
  
- keypad(menu_c, TRUE);
- while((c = wgetch(menu_c)) !=KEY_F(4))
+ keypad(window_menu, TRUE);
+ while((c = wgetch(window_menu)) !=KEY_F(4))
  {
 	 switch(c)
 	 {
 	    case KEY_DOWN:
 					menu_driver(my_menu, REQ_DOWN_ITEM);
+					//itemname =(char *)item_name(current_item(my_menu))
+					//set_user_ptrs(panels_calc,choices,size,itemname);	//set_panel_userptr
 					break;
 		case KEY_UP:
 					menu_driver(my_menu, REQ_UP_ITEM);
@@ -116,14 +122,14 @@ int main(void)
 			{	if(choices[0]==item_name(current_item(my_menu))) //Interest_Cal
 				{	
 					//wclrtoeol(win_c);
-					win_c = create_wind(&winb, my_menu);
-					show_panel(my_panels[1]);
+					windows_calc[0] = create_wind(&winb, my_menu);
+					show_panel(panels_calc[1]);
 					update_panels();
-					wbkgd(win_c,COLOR_PAIR(1)); //background and font color of win_c
+					wbkgd(windows_calc[0],COLOR_PAIR(1)); //background and font color of win_c
 					//call function to fill up the interest calculator window
 					row = 1; 
 					//keypad(win_c, TRUE);
-					interest_calc_win(win_c, row, col, paninterest); //row is 1, col is 1
+					interest_calc_win(windows_calc[0], row, col, paninterest); //row is 1, col is 1
 					//hide_panel(my_panels[1]);
 					update_panels();
 					break;
@@ -135,7 +141,7 @@ int main(void)
 				}
 			}
      }	 
-	 wrefresh(menu_c);
+	 wrefresh(window_menu);
  }	 
  
   unpost_menu(my_menu);
