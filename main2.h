@@ -19,14 +19,20 @@ typedef struct _WIN_struct{
     
 }WIN;
 
+typedef struct _PANEL_DATA{
+  PANEL *item_panel; //panel for pointer to item. ex. is PANEL_DATA item_panel = panels_calc[i]
+  void (*p)(WINDOW *, int x, int y); //pointer to function with arguments
+  	
+}PANEL_DATA; // data type to connect with the items
+
 
 void init_wparam(WIN *pwin, int ymax, int xmax); //setup window dimensions
 WINDOW *create_wind(WIN *pwin, MENU *menu);
 void win_border(WINDOW *win, MENU *menu, int flag);
-//void set_user_ptrs(PANEL **, char **, int n, char *);
-void interest_calc_win(WINDOW *win_dow, int row, int col, PANEL *paninterest);
+void interest_calc_win(WINDOW *win_dow, int row, int col);
 float compute(float P, float Rpct, int N);
-float InputF(WINDOW *, char array[], PANEL *paninterest); 
+float InputF(WINDOW *, char array[]); 
+void func_exit(void);
 
 
 void init_wparam(WIN *pwin, int ymax, int xmax) //if 1 calculator window; if 2 menu window
@@ -85,28 +91,7 @@ void win_border(WINDOW *win, MENU *menu, int flag)
    
 }
 
-/*PANEL *set_user_ptrs(PANEL **panels, char **choices, int n, char *itemname)
-{
-	//set user ptrs when arrow keys are pressed. This function will do it.
-	
-	int i;
-	char choicename = *itemname;
-	PANEL *highlight
-  	WINDOW *win;  
-	
-	for(i=0;i<n;i++)
-	{
-		if(choices[i] == choicename)	
-			highlight = panel[i];
-			break;
-	}		
-	
-	return highlight;
-	
-}*/
-
-
-void interest_calc_win(WINDOW *local_win, int row, int col, PANEL *paninterest)
+void interest_calc_win(WINDOW *local_win, int row, int col)
 {
   char charlocal_buff[len];
   float P,R=0.0,M;
@@ -116,18 +101,18 @@ void interest_calc_win(WINDOW *local_win, int row, int col, PANEL *paninterest)
   mvwaddstr(local_win,row++,col,"principal:5000,Rate;15.5%%No. of years: 5. monthly 125.77");
   row=4; col=2;
   mvwaddstr(local_win,row++,col,"Enter Principal:");
-  P=InputF(local_win, charlocal_buff, paninterest );
+  P=InputF(local_win, charlocal_buff);
   wrefresh(local_win); 
   mvwprintw(local_win,row++,col,"%.2f", P); 
   wrefresh(local_win); 
   mvwaddstr(local_win,row++,col,"Enter Rate:     ");
   wrefresh(local_win); 
-  R=InputF(local_win,charlocal_buff, paninterest);
+  R=InputF(local_win,charlocal_buff);
   mvwprintw(local_win,row++,col,"%.2f", R); 
   wrefresh(local_win); 
   mvwaddstr(local_win,row++,col,"Enter No. years:");
   wrefresh(local_win); 
-  N=InputF(local_win,charlocal_buff, paninterest);
+  N=InputF(local_win,charlocal_buff);
   mvwprintw(local_win,row++,col,"%d", N); 
   wrefresh(local_win); 
   //this is for formula.c 
@@ -141,7 +126,7 @@ void interest_calc_win(WINDOW *local_win, int row, int col, PANEL *paninterest)
   wrefresh(local_win); 
 }		
  
-float InputF(WINDOW *win_c, char pchar[], PANEL *paninterest)
+float InputF(WINDOW *win_c, char pchar[])
 {
   int s=0; 
   int row=0,col=0;
@@ -193,3 +178,9 @@ float InputF(WINDOW *win_c, char pchar[], PANEL *paninterest)
      conv = atof(pchar);
      return conv;
  }   
+ 
+ 
+ void func_exit(void)
+ {
+     exit(0);	 
+ }	 
