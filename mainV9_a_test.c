@@ -134,7 +134,7 @@ int main(void)
 		 else
 		 {
 			item_ptrs[i].item_panel = panels_calc[i];	
-			item_ptrs[i].p = fah_to_celcius; 
+			item_ptrs[i].p = celc_to_fahrenheit; 
 			item_ptrs[i].desc_flag = i;
 		 }	 
 	}		
@@ -176,26 +176,17 @@ int main(void)
 				PANEL *panel_cur;
 				void(*func_p)(WINDOW *, int x,int y); // for exit function
 				//char *winname;
+				int width, height, length;
 								
 				PANEL_DATA *ptrs;	
 
 				
 				ptrs=(PANEL_DATA *)malloc(sizeof(PANEL_DATA));
 				ptrs = (PANEL_DATA *)item_userptr(cur); // give panel data(panels_calci[i]) to panel_cur
-				
-				//win_descrip = description_list(winname);
-				//mvwprintw(window_desc, 1,0, "%s", win_descrip);
-				
-				//panel associated with current_item will be at the top panel
-				//top_panel(ptrs->item_panel); - problem malloc
-				
-				//diplay the description of the calculator at the bottom of the screen -OK
-				/*win_descrip = description_list(winname);
-				mvwprintw(stdscr, LINES-2, 0, "%s",win_descrip);	
-				wrefresh(stdscr); */  //whole block of code has problem malloc
+
 
 				//get the associated windows of the current highlighted panel
-				//length = strlen(cur_highlight);
+				length = strlen(cur_highlight);
 				
 				panel_cur = (PANEL *)ptrs->item_panel;
 				old_win = panel_window(panel_cur);
@@ -206,8 +197,8 @@ int main(void)
 				delwin(old_win); 
 				
 				//for the window label - OK
-				//getmaxyx(latest_win, height, width);
-				//mvwprintw(latest_win,0,(width - length)/2, "%s", cur_highlight); 
+				getmaxyx(latest_win, height, width);
+				mvwprintw(latest_win,0,(width - length)/2, "%s", cur_highlight); 
 				//wrefresh(latest_win); 
 				//doupdate();
 				

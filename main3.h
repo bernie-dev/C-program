@@ -36,6 +36,7 @@ void interest_calc_win(WINDOW *win_dow, int row, int col);
 void fah_to_celsius(WINDOW *win_dow, int row, int col);
 float compute(float P, float Rpct, int N);
 float ComputeFahtoCel(float fahr);
+float ComputeCeltoFah(float Celc);
 float InputF(WINDOW *, char array[]); 
 char *item_desc(ITEM *);
 void func_exit(void);
@@ -143,34 +144,26 @@ void fah_to_celcius(WINDOW *local_win, int row, int col)
   fahr=InputF(local_win, charlocal_buff); //input fahrenheit using function InputF then transfer to Celc
   row+=3; col+=20;
   mvwprintw(local_win,row,col,"Celsius Equivalent is: %.2f", ComputeFahtoCel(fahr));
-  
-   /*
-  row=4; col=2;
-  mvwaddstr(local_win,row++,col,"Enter Principal:");
-  P=InputF(local_win, charlocal_buff);
-  wrefresh(local_win); 
-  mvwprintw(local_win,row++,col,"%.2f", P); 
-  wrefresh(local_win); 
-  mvwaddstr(local_win,row++,col,"Enter Rate:     ");
-  wrefresh(local_win); 
-  R=InputF(local_win,charlocal_buff);
-  mvwprintw(local_win,row++,col,"%.2f", R); 
-  wrefresh(local_win); 
-  mvwaddstr(local_win,row++,col,"Enter No. years:");
-  wrefresh(local_win); 
-  N=InputF(local_win,charlocal_buff);
-  mvwprintw(local_win,row++,col,"%d", N); 
-  wrefresh(local_win); 
-  //this is for formula.c 
-  M=compute(P,R,N);
-  wrefresh(local_win); 
-  
-  mvwprintw(local_win,row++,col,"Principal: %.2f", P);  
-  mvwprintw(local_win,row++,col,"Rate(%%): %.2f", R);
-  mvwprintw(local_win,row++,col,"Number of years: %d", N);
-  mvwprintw(local_win,row++,2,"Monthly Payments: %.2f", M);*/
   wrefresh(local_win); 
 }		
+
+void celc_to_fahrenheit(WINDOW *local_win, int row, int col)
+{
+  char charlocal_buff[len];
+  float celc;
+ 
+  
+  getbegyx(local_win,row, col);
+  //mvwprintw(local_win, row,col, "y is %d, x is %d", row,col); //row is 3 col is 27
+  row = 2;
+  col = 1;
+  mvwprintw(local_win, row++,col, "Input Celsius to convert to Fahrenheit");
+  mvwaddstr(local_win,row,col, "Enter Celsius:"); //row is 3
+  celc=InputF(local_win, charlocal_buff); //input fahrenheit using function InputF then transfer to Celc
+  row+=3; col+=20;
+  mvwprintw(local_win,row,col,"Fahrenheit Equivalent is: %.2f", ComputeCeltoFah(celc));
+  wrefresh(local_win); 
+}	
  
 float InputF(WINDOW *win_c, char pchar[])
 {
