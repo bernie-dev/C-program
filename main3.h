@@ -22,10 +22,12 @@ typedef struct _WIN_struct{
 typedef struct _PANEL_DATA{
   PANEL *item_panel; //panel for pointer to item. ex. is PANEL_DATA item_panel = panels_calc[i]
   void (*p)(WINDOW *, int x, int y); //pointer to function with arguments
+  int desc_flag;
 
   	
 }PANEL_DATA; // data type to connect with the items
 
+//function prototype -start
 
 void init_wparam(WIN *pwin, int ymax, int xmax); //setup window dimensions
 WINDOW *create_wind(WIN *pwin, MENU *menu);
@@ -35,16 +37,18 @@ void fah_to_celsius(WINDOW *win_dow, int row, int col);
 float compute(float P, float Rpct, int N);
 float ComputeFahtoCel(float fahr);
 float InputF(WINDOW *, char array[]); 
+char *item_desc(ITEM *);
 void func_exit(void);
+
+//function prototype -end
 
 
 void init_wparam(WIN *pwin, int ymax, int xmax) //if 1 calculator window; if 2 menu window
-{
-  pwin->HEIGHT=(pwin->flag == 1) ? ymax/2+5 : ymax/2;	
-  pwin->WIDTH=(pwin->flag ==1) ? xmax*0.70 : xmax*0.30-3;
-  pwin->startx=(pwin->flag ==1) ? xmax-pwin->WIDTH : xmax-COLS;
-  pwin->starty=3;
-  
+{	
+		pwin->HEIGHT=(pwin->flag == 1) ? ymax/2+5 : ymax/2;	
+		pwin->WIDTH=(pwin->flag ==1) ? xmax*0.70 : xmax*0.30-3;
+		pwin->startx=(pwin->flag ==1) ? xmax-pwin->WIDTH : xmax-COLS;
+		pwin->starty=3;
 }	
 
 
@@ -56,8 +60,10 @@ WINDOW *create_wind(WIN *pwin, MENU *menu)
   	
   if(pwin->flag==1)
 	win_border(local_win, menu, 1);
-  else
+  else if(pwin->flag==2)
     win_border(local_win, menu, 2);
+  else
+	box(local_win,0,0);
    
   refresh();
   wrefresh(local_win);
@@ -71,7 +77,7 @@ void win_border(WINDOW *win, MENU *menu, int flag)
  
    getmaxyx(win, height, width);
 	
-	
+   //draw a border around the windows -start	
    mvwaddch(win, 0,0, ACS_BULLET); //upper left side corner
    mvwhline(win, 0,1, ACS_HLINE, width-2); //line upper side 
    mvwaddch(win, 0,width-1, ACS_BULLET); //upper right side corner
@@ -80,6 +86,7 @@ void win_border(WINDOW *win, MENU *menu, int flag)
    mvwhline(win, height-1, 1, ACS_HLINE, width-2); //lower side
    mvwvline(win, 1,width-1, ACS_VLINE, height-2);  //right side corner line
    mvwaddch(win, height-1, width-1, ACS_BULLET);
+   //draw a border around the windows -end
    
    if(flag == 2)
 	mvwprintw(win,0,(width - 4)/2, "MENU");
@@ -125,7 +132,7 @@ void fah_to_celcius(WINDOW *local_win, int row, int col)
 {
   char charlocal_buff[len];
   float fahr;
-  //int N=0; 	
+ 
   
   getbegyx(local_win,row, col);
   //mvwprintw(local_win, row,col, "y is %d, x is %d", row,col); //row is 3 col is 27
@@ -220,7 +227,6 @@ float InputF(WINDOW *win_c, char pchar[])
      conv = atof(pchar);
      return conv;
  }   
- 
  
  void func_exit(void)
  {
