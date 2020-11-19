@@ -20,3 +20,12 @@ float ComputeFahtoCel(float fahr)
   
   return celsius;	
 }	
+
+float ComputeCeltoFah(float Celc)
+{
+   float fahrenheit;
+   
+   fahrenheit = (9.0*Celc) / 5.0 + 32.0;
+   
+   return fahrenheit;	
+}	
