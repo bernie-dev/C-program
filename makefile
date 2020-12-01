@@ -1,38 +1,31 @@
 #_*_MakeFile_*_
 
-#interest_calc: interest_calc
-#    gcc interest_calc.c -o interest_calc -lncurses -lm
-
-#calcuV2: calcuV2
-#    gcc calcuV2.c -o calcuV2 -lncurses -lm
-
-#calcuV3: calcuV3
-#    gcc calcuV3.c -o calcuV3 -lncurses -lm
-
+PWD = /home/bernie/Desktop/C_Projects/ncurses_programs/programs_bernard_ncurses/
 CC=gcc
 LIB0=-lmenu
 LIB1=-lpanel
 LIB2=-lncurses
 LIB3=-lm
 
-#calc_col: formula.o main.o
-#	${CC} formula.o main.o -o calc_col10 ${LIB0} ${LIB1} ${LIB2} ${LIB3}
+CFLAGS = -c
+LIBS = ${LIB0} ${LIB1} ${LIB2} ${LIB3}
 
-calc_col: formula.o main.o
-	${CC} formula.o main.o -o calc_col09a ${LIB0} ${LIB1} ${LIB2} ${LIB3}
+
+calcu_lib_with_form: formula.o window_creation.o calcu_functions.o main.o
+	${CC} formula.o window_creation.o calcu_functions.o main.o -o calc_col_with_form $(LIBS)
 
 formula.o: formula.c 
-	${CC} -c formula.c -o formula.o ${LIB0} ${LIB1} ${LIB2} ${LIB3}
-
-#main.o: mainV6.c main3.h
-#	${CC} -c mainV6.c -o main.o ${LIB0} ${LIB1} ${LIB2} ${LIB3}
-
-main.o: mainV9_a_test.c main3.h
-	${CC} -c mainV9_a_test.c -o main.o ${LIB0} ${LIB1} ${LIB2} ${LIB3}
+	${CC} ${CFLAGS} formula.c -o formula.o $(LIBS)
 	
-#main.o: mainV10_test.c main4.h description.h
-#	${CC} -c mainV10_test.c -o main.o ${LIB0} ${LIB1} ${LIB2} ${LIB3}
+window_creation.o: window_creation.c main_with_form.h
+	${CC} ${CFLAGS} window_creation.c -o window_creation.o $(LIBS)
 
+calcu_functions.o: calcu_functions.c main_with_form.h
+	${CC} ${CFLAGS} calcu_functions.c -o calcu_functions.o $(LIBS)
+
+main.o: calcu_lib_with_form.c main_with_form.h
+	${CC} ${CFLAGS} calcu_lib_with_form.c -o main.o $(LIBS)
+	
 clean:
 	rm *.o    
 
